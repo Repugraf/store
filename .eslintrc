@@ -55,6 +55,8 @@
   },
   "ignorePatterns": [
     "node_modules",
-    "lib"
+    "lib",
+    "jest.config.js",
+    "*.test.ts"
   ]
 }
