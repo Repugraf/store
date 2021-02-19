@@ -1,4 +1,4 @@
-import { copyValue } from "./utils";
+import { copyValue, getUniqueId } from "./utils";
 
 type Unsubscribe = () => void;
 type PublisherCallback<T> = (data: T) => T;
@@ -27,7 +27,7 @@ export const createStore = <T>(initialStore: T) => {
   };
 
   const subscribe = (callback: SubscriberCallback<T>): Unsubscribe => {
-    const id = Math.random().toString(36).substr(2) + Date.now().toString(36);
+    const id = getUniqueId();
 
     subscribers[id] = callback;
 
