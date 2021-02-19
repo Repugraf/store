@@ -1,6 +1,6 @@
 {
   "name": "@repugraf/store",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An implementation of observer pattern",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
