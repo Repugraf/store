@@ -53,4 +53,27 @@ describe("createStore tests", () => {
     deepStrictEqual(innerState, 2);
   });
 
+  test("amount of publish events should be equal to amount of subscribers", () => {
+    const store = createStore(0);
+    let events = 0;
+
+    store.subscribe(() => events++);
+    store.subscribe(() => events++);
+    store.subscribe(() => events++);
+
+    store.publish(1);
+
+    strictEqual(events, 3);
+
+  });
+
+  test("there should be no publish events if there is no subscribers", () => {
+    const store = createStore(0);
+    let events = 0;
+
+    store.publish(1);
+
+    strictEqual(events, 0);
+  });
+
 });
