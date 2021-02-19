@@ -42,4 +42,15 @@ describe("createStore tests", () => {
     deepStrictEqual(store.getState(), { a: 1 });
   });
 
+  test("should update subscribers by passing callback to publisher", () => {
+    const store = createStore(1);
+    let innerState = 1;
+
+    store.subscribe(s => innerState = s);
+
+    store.publish(s => ++s);
+
+    deepStrictEqual(innerState, 2);
+  });
+
 });
