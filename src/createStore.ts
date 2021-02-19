@@ -1,6 +1,7 @@
 import { copyValue } from "./utils";
 
 type Unsubscribe = () => void;
+type PublisherCallback<T> = (data: T) => T;
 type SubscriberCallback<T> = (data: T) => any;
 type SubscribersHashMap<T> = { [id: string]: SubscriberCallback<T> };
 
@@ -11,8 +12,16 @@ export const createStore = <T>(initialStore: T) => {
 
   const getState = () => copyValue(store);
 
-  const publish = (data: T) => {
-    store = copyValue(data);
+  const publish = (dataOrCb: T | PublisherCallback<T>) => {
+
+    let value: T;
+    if (typeof dataOrCb === "function") {
+      value = (dataOrCb as PublisherCallback<T>)(getState());
+    } else {
+      value = dataOrCb;
+    }
+
+    store = value;
 
     for (const id in subscribers) subscribers[id](getState());
   };
