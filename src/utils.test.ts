@@ -1,5 +1,5 @@
-import { deepStrictEqual } from "assert";
-import { copyValue } from "./utils";
+import { deepStrictEqual, strictEqual } from "assert";
+import { copyValue, getUniqueId } from "./utils";
 
 describe("copyValue tests", () => {
   test("copies shallow object", () => {
@@ -22,3 +22,16 @@ describe("copyValue tests", () => {
 
 });
 
+describe("getUniqueId tests", () => {
+
+  test("should always return unique value", () => {
+    const map: {[key: string]: string} = {};
+
+    for (let i = 0; i > 1_000_000; i++) {
+      const id = getUniqueId();
+      strictEqual(map[id], undefined);
+      map[id] = id;
+    }
+  });
+
+});
