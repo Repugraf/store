@@ -1,10 +1,10 @@
 {
   "name": "@repugraf/store",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An implementation of observer pattern",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
-  "types": "./lib/est/index.d.ts",
+  "types": "./lib/esm/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "lint": "eslint .",
