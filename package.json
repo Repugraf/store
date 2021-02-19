@@ -1,5 +1,5 @@
 {
-  "name": "store",
+  "name": "@repugraf/store",
   "version": "1.0.0",
   "description": "An implementation of observer pattern",
   "main": "./lib/cjs/index.js",
@@ -12,7 +12,20 @@
     "test:watch": "jest --watch",
     "prepublish": "npm run build"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Repugraf/store.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Repugraf/store/issues"
+  },
+  "homepage": "https://github.com/Repugraf/store#readme",
+  "keywords": [
+    "store",
+    "observer",
+    "pub",
+    "sub"
+  ],
   "author": "Serhii Mamedov",
   "license": "ISC",
   "devDependencies": {
