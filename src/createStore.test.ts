@@ -79,8 +79,7 @@ describe("createStore tests", () => {
   test("should be able to mutate inner store state if explicitly enabled", () => {
     const store = createStore({ x: 1 }, { enableMutations: true });
 
-    const currentValue = store.getState();
-    currentValue.x = 2;
+    store.getState().x = 2;
 
     deepStrictEqual(store.getState(), { x: 2 });
   });
