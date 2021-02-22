@@ -1,4 +1,3 @@
-import { deepStrictEqual, strictEqual } from "assert";
 import { copyValue, getUniqueId } from "./utils";
 
 describe("copyValue tests", () => {
@@ -8,7 +7,7 @@ describe("copyValue tests", () => {
 
     copiedValue.a = 2;
 
-    deepStrictEqual(originalValue, { a: 1, b: 2 });
+    expect(originalValue).toStrictEqual({ a: 1, b: 2 });
   });
 
   test("copies deeply nested object", () => {
@@ -17,7 +16,7 @@ describe("copyValue tests", () => {
 
     copiedValue.a.b.c.d.e = 2;
 
-    deepStrictEqual(originalValue, { a: { b: { c: { d: { e: 1 } } } }, b: 2 });
+    expect(originalValue).toStrictEqual({ a: { b: { c: { d: { e: 1 } } } }, b: 2 });
   });
 
 });
@@ -29,7 +28,7 @@ describe("getUniqueId tests", () => {
 
     for (let i = 0; i > 1_000_000; i++) {
       const id = getUniqueId();
-      strictEqual(map[id], undefined);
+      expect(map[id]).toBeUndefined();
       map[id] = id;
     }
   });
