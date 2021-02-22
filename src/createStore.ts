@@ -5,12 +5,32 @@ type PublisherCallback<T> = (data: T) => T;
 type SubscriberCallback<T> = (data: T) => any;
 type SubscribersHashMap<T> = { [id: string]: SubscriberCallback<T> };
 
-export const createStore = <T>(initialStore: T) => {
+interface StoreOptions {
+  /**
+   * If enabled every store access will return actual value instead of a copy  
+   * This may break the workflow - store should change only from publish events  
+   * But copy of deeply nested objects every access may cause performance issues
+   * 
+   * default - `false`
+   * */
+  enableMutations: boolean
+}
+
+const defaultOptions: StoreOptions = {
+  enableMutations: false
+};
+
+export const createStore = <T>(
+  initialStore: T,
+  options: Partial<StoreOptions> = defaultOptions
+) => {
+  const { enableMutations } = { ...defaultOptions, ...options };
+
   let store = initialStore;
 
   const subscribers: SubscribersHashMap<T> = {};
 
-  const getState = () => copyValue(store);
+  const getState = () => enableMutations ? store : copyValue(store);
 
   const publish = (dataOrCb: T | PublisherCallback<T>) => {
 
