@@ -1,4 +1,4 @@
-import { copyValue, getUniqueId } from "./utils";
+import { copyValue, getUniqueId } from "./utils.js";
 
 type Unsubscribe = () => void;
 type PublisherCallback<T> = (data: T) => T;
