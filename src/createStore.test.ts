@@ -1,5 +1,4 @@
 import { createStore } from "./createStore";
-import { strictEqual, deepStrictEqual } from "assert";
 
 describe("createStore tests", () => {
 
@@ -8,7 +7,7 @@ describe("createStore tests", () => {
 
     store.publish(true);
 
-    strictEqual(store.getState(), true);
+    expect(store.getState()).toBe(true);
   });
 
   test("should update subscribers on publish", () => {
@@ -19,7 +18,7 @@ describe("createStore tests", () => {
 
     store.publish(2);
 
-    strictEqual(innerState, 2);
+    expect(innerState).toBe(2);
   });
 
   test("should not update unsubscribed subscribers on publish", () => {
@@ -31,7 +30,7 @@ describe("createStore tests", () => {
 
     store.publish(2);
 
-    strictEqual(innerState, 1);
+    expect(innerState).toBe(1);
   });
 
   test("should not be able to mutate inner store state", () => {
@@ -39,7 +38,7 @@ describe("createStore tests", () => {
 
     store.getState().a = 5;
 
-    deepStrictEqual(store.getState(), { a: 1 });
+    expect(store.getState()).toStrictEqual({ a: 1 })
   });
 
   test("should update subscribers by passing callback to publisher", () => {
@@ -50,7 +49,7 @@ describe("createStore tests", () => {
 
     store.publish(s => ++s);
 
-    deepStrictEqual(innerState, 2);
+    expect(innerState).toBe(2);
   });
 
   test("amount of publish events should be equal to amount of subscribers", () => {
@@ -63,8 +62,7 @@ describe("createStore tests", () => {
 
     store.publish(1);
 
-    strictEqual(events, 3);
-
+    expect(events).toBe(3);
   });
 
   test("there should be no publish events if there is no subscribers", () => {
@@ -73,7 +71,7 @@ describe("createStore tests", () => {
 
     store.publish(1);
 
-    strictEqual(events, 0);
+    expect(events).toBe(0);
   });
 
   test("should be able to mutate inner store state if explicitly enabled", () => {
@@ -81,7 +79,7 @@ describe("createStore tests", () => {
 
     store.getState().x = 2;
 
-    deepStrictEqual(store.getState(), { x: 2 });
+    expect(store.getState()).toStrictEqual({ x: 2 });
   });
 
 });
