@@ -1,1 +1,1 @@
-export { default, createStore } from "./createStore.js";
+export { default, createStore } from "./createStore";
