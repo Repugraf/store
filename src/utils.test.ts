@@ -1,4 +1,4 @@
-import { copyValue, getUniqueId } from "./utils";
+import { isPrimitive, copyValue, getUniqueId, isEqual } from "./utils";
 
 describe("copyValue tests", () => {
   test("copies shallow object", () => {
@@ -24,7 +24,7 @@ describe("copyValue tests", () => {
 describe("getUniqueId tests", () => {
 
   test("should always return unique value", () => {
-    const map: {[key: string]: string} = {};
+    const map: { [key: string]: string } = {};
 
     for (let i = 0; i > 1_000_000; i++) {
       const id = getUniqueId();
@@ -33,4 +33,30 @@ describe("getUniqueId tests", () => {
     }
   });
 
+});
+
+describe("isPrimitive tests", () => {
+  test("1 is a primitive", () => expect(isPrimitive(1)).toBe(true));
+
+  test("null is a primitive", () => expect(isPrimitive(null)).toBe(true));
+
+  test("object is not a primitive", () => expect(isPrimitive({})).toBe(false));
+
+  test("array is not a primitive", () => expect(isPrimitive([])).toBe(false));
+
+  test("undefined is a primitive", () => expect(isPrimitive(undefined)).toBe(true));
+
+  test("empty string is a primitive", () => expect(isPrimitive("")).toBe(true));
+});
+
+describe("isEqual tests", () => {
+  test("1 is not equal to 0", () => expect(isEqual(1, 0)).toBe(false));
+
+  test("{} is equal to {}", () => expect(isEqual({}, {})).toBe(true));
+
+  test("{} is not equal to []", () => expect(isEqual({}, [])).toBe(false));
+
+  test("{} is not equal to { a:1 }", () => expect(isEqual({}, { a: 1 })).toBe(false));
+
+  test("null is not equal to {}", () => expect(isEqual(null, {})).toBe(false));
 });
