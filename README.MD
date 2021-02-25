@@ -104,3 +104,7 @@ setInterval(() => {
   });
 }), 10);
 ```
+
+### 2. Disable Equality Check
+Store will not trigger publish event if published value is the same as before  
+It's possible to disable this behavior by setting `disableEqualityCheck` to `true`
