@@ -1,4 +1,4 @@
-import { copyValue, getUniqueId } from "./utils";
+import { copyValue, getUniqueId, isEqual } from "./utils";
 
 type Unsubscribe = () => void;
 type PublisherCallback<T> = (data: T) => T;
@@ -13,18 +13,29 @@ interface StoreOptions {
    * 
    * default - `false`
    * */
-  enableMutations: boolean
+  enableMutations: boolean,
+  /**
+   * By default Store will check published value if it's the same as it was before  
+   * If the value is the same publish event will not happen and subscribers callbacks will not be run
+   * 
+   * default - `false`
+   * */
+  disableEqualityCheck: boolean
 }
 
 const defaultOptions: StoreOptions = {
-  enableMutations: false
+  enableMutations: false,
+  disableEqualityCheck: false
 };
 
 export const createStore = <T>(
   initialStore: T,
   options: Partial<StoreOptions> = defaultOptions
 ) => {
-  const { enableMutations } = { ...defaultOptions, ...options };
+  const {
+    enableMutations,
+    disableEqualityCheck
+  } = { ...defaultOptions, ...options };
 
   let store = initialStore;
 
@@ -41,9 +52,11 @@ export const createStore = <T>(
       value = dataOrCb;
     }
 
-    store = value;
+    if (disableEqualityCheck || !isEqual(store, value)) {
+      store = value;
 
-    for (const id in subscribers) subscribers[id](getState());
+      for (const id in subscribers) subscribers[id](getState());
+    }
   };
 
   const subscribe = (callback: SubscriberCallback<T>): Unsubscribe => {
