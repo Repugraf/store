@@ -82,4 +82,43 @@ describe("createStore tests", () => {
     expect(store.getState()).toStrictEqual({ x: 2 });
   });
 
+  test("should not publish if published primitive value is the same", () => {
+    let publishEvents = 0;
+    const store = createStore(0);
+
+    store.subscribe(() => publishEvents++);
+
+    store.publish(0);
+    store.publish(0);
+    store.publish(0);
+
+    expect(publishEvents).toBe(0);
+  });
+
+  test("should not publish if published non-primitive value is the same", () => {
+    let publishEvents = 0;
+    const store = createStore({ a: 1, b: 2 });
+
+    store.subscribe(() => publishEvents++);
+
+    store.publish({ a: 1, b: 2 });
+    store.publish({ a: 1, b: 2 });
+    store.publish({ a: 1, b: 2 });
+
+    expect(publishEvents).toBe(0);
+  });
+
+  test("should publish anyway if equality check is disabled", () => {
+    let publishEvents = 0;
+    const store = createStore(0, { disableEqualityCheck: true });
+
+    store.subscribe(() => publishEvents++);
+
+    store.publish(0);
+    store.publish(0);
+    store.publish(0);
+
+    expect(publishEvents).toBe(3);
+  });
+
 });
