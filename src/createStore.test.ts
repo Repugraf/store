@@ -1,3 +1,4 @@
+import { cloneDeep, isEqual } from "lodash";
 import { createStore } from "./createStore";
 
 describe("createStore tests", () => {
@@ -75,7 +76,7 @@ describe("createStore tests", () => {
   });
 
   test("should be able to mutate inner store state if explicitly enabled", () => {
-    const store = createStore({ x: 1 }, { enableMutations: true });
+    const store = createStore({ x: 1 }, { cloneFunction: null });
 
     store.getState().x = 2;
 
@@ -110,7 +111,7 @@ describe("createStore tests", () => {
 
   test("should publish anyway if equality check is disabled", () => {
     let publishEvents = 0;
-    const store = createStore(0, { disableEqualityCheck: true });
+    const store = createStore(0, { isEqualFunction: null });
 
     store.subscribe(() => publishEvents++);
 
@@ -119,6 +120,41 @@ describe("createStore tests", () => {
     store.publish(0);
 
     expect(publishEvents).toBe(3);
+  });
+
+  test("should throw if store contains invalid json properties", () => {
+    // @ts-ignore
+    const state = { a: 1n };
+    // @ts-ignore
+    state.state = state;
+
+    expect(() => createStore(state)).toThrow();
+  });
+
+  test("should work with invalid json properties if custom clone and isEqual functions support it", () => {
+    // @ts-ignore
+    const state = { a: 1n };
+    // @ts-ignore
+    state.state = state;
+
+    // @ts-ignore
+    const expectedState = { a: 2n };
+    // @ts-ignore
+    expectedState.state = expectedState;
+
+    const store = createStore(state, {
+      cloneFunction: cloneDeep,
+      isEqualFunction: isEqual
+    });
+
+    store.subscribe(() => {});
+
+    store.publish(s => {
+      s.a++;
+      return s;
+    });
+
+    expect(store.getState()).toStrictEqual(expectedState);
   });
 
 });
