@@ -1,47 +1,57 @@
+import type {
+  Unsubscribe,
+  PublisherCallback,
+  SubscriberCallback,
+  SubscribersHashMap,
+  StoreOptions
+} from "./__types";
+
 import { clone, uid, isEqual } from "./utils";
 
-type Unsubscribe = () => void;
-type PublisherCallback<T> = (data: T) => T;
-type SubscriberCallback<T> = (data: T) => any;
-type SubscribersHashMap<T> = { [id: string]: SubscriberCallback<T> };
-
-interface StoreOptions {
-  /**
-   * If enabled every store access will return actual value instead of a copy  
-   * This may break the workflow - store should change only from publish events  
-   * But copy of deeply nested objects every access may cause performance issues
-   * 
-   * default - `false`
-   * */
-  enableMutations: boolean,
-  /**
-   * By default Store will check published value if it's the same as it was before  
-   * If the value is the same publish event will not happen and subscribers callbacks will not be run
-   * 
-   * default - `false`
-   * */
-  disableEqualityCheck: boolean
-}
+const jsonStringifyDocsLink = "https://developer.mozilla.org/en-US" +
+  "/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description";
 
 const defaultOptions: StoreOptions = {
-  enableMutations: false,
-  disableEqualityCheck: false
+  cloneFunction: clone,
+  isEqualFunction: isEqual
 };
 
 export const createStore = <T>(
-  initialStore: T,
+  initialState: T,
   options: Partial<StoreOptions> = defaultOptions
 ) => {
   const {
-    enableMutations,
-    disableEqualityCheck
+    cloneFunction,
+    isEqualFunction
   } = { ...defaultOptions, ...options };
 
-  let store = initialStore;
+  let state = initialState;
 
   const subscribers: SubscribersHashMap<T> = {};
 
-  const getState = () => enableMutations ? store : clone(store);
+  const getState = () => {
+    let value: T;
+
+    try {
+      value = cloneFunction ? cloneFunction(state) : state;
+    } catch (e) {
+      const errMessage = e.message;
+
+      e.message = "clone function crashed\n";
+
+      if (options.cloneFunction === undefined) e.message =+ (
+        "Don't use invalid json properties in store or provide custom clone function" +
+        `\nRead more info here: ${jsonStringifyDocsLink}\n`
+      );
+
+      e.message =+ errMessage;
+
+      throw e;
+    }
+
+
+    return value;
+  };
 
   const publish = (dataOrCb: T | PublisherCallback<T>) => {
 
@@ -52,8 +62,27 @@ export const createStore = <T>(
       value = dataOrCb;
     }
 
-    if (disableEqualityCheck || !isEqual(store, value)) {
-      store = value;
+    let equal: boolean;
+
+    try {
+      equal = !!isEqualFunction?.(state, value);
+    } catch (e) {
+      const errMessage = e.message;
+
+      e.message = "isEqual function crashed\n";
+
+      if (options.isEqualFunction === undefined) e.message =+ (
+        "Don't use invalid json properties in store or provide custom isEqual function" +
+        `\nRead more info here: ${jsonStringifyDocsLink}\n`
+      );
+
+      e.message =+ errMessage;
+
+      throw e;
+    }
+
+    if (!equal) {
+      state = value;
 
       for (const id in subscribers) subscribers[id](getState());
     }
@@ -68,6 +97,8 @@ export const createStore = <T>(
       delete subscribers[id];
     };
   };
+
+  getState(), isEqualFunction?.(state, state); // validate state
 
   return {
     publish,
