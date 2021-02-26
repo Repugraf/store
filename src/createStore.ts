@@ -1,4 +1,4 @@
-import { copyValue, getUniqueId, isEqual } from "./utils";
+import { clone, uid, isEqual } from "./utils";
 
 type Unsubscribe = () => void;
 type PublisherCallback<T> = (data: T) => T;
@@ -41,7 +41,7 @@ export const createStore = <T>(
 
   const subscribers: SubscribersHashMap<T> = {};
 
-  const getState = () => enableMutations ? store : copyValue(store);
+  const getState = () => enableMutations ? store : clone(store);
 
   const publish = (dataOrCb: T | PublisherCallback<T>) => {
 
@@ -60,7 +60,7 @@ export const createStore = <T>(
   };
 
   const subscribe = (callback: SubscriberCallback<T>): Unsubscribe => {
-    const id = getUniqueId();
+    const id = uid();
 
     subscribers[id] = callback;
 

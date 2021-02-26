@@ -2,11 +2,11 @@ export const isPrimitive = (value: any) => (
   typeof value !== "object" || value === null
 );
 
-export const copyValue = <T>(value: T): T => (
+export const clone = <T>(value: T): T => (
   isPrimitive(value) ? value : JSON.parse(JSON.stringify(value))
 );
 
-export const getUniqueId = () => (
+export const uid = () => (
   Math.random().toString(36).substr(2) + Date.now().toString(36)
 );
 

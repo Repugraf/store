@@ -1,18 +1,18 @@
-import { isPrimitive, copyValue, getUniqueId, isEqual } from "./utils";
+import { isPrimitive, clone, uid, isEqual } from "./utils";
 
-describe("copyValue tests", () => {
-  test("copies shallow object", () => {
+describe("clone tests", () => {
+  test("clones shallow object", () => {
     const originalValue = { a: 1, b: 2 };
-    const copiedValue = copyValue(originalValue);
+    const copiedValue = clone(originalValue);
 
     copiedValue.a = 2;
 
     expect(originalValue).toStrictEqual({ a: 1, b: 2 });
   });
 
-  test("copies deeply nested object", () => {
+  test("clones deeply nested object", () => {
     const originalValue = { a: { b: { c: { d: { e: 1 } } } }, b: 2 };
-    const copiedValue = copyValue(originalValue);
+    const copiedValue = clone(originalValue);
 
     copiedValue.a.b.c.d.e = 2;
 
@@ -21,13 +21,13 @@ describe("copyValue tests", () => {
 
 });
 
-describe("getUniqueId tests", () => {
+describe("uid tests", () => {
 
   test("should always return unique value", () => {
     const map: { [key: string]: string } = {};
 
     for (let i = 0; i > 1_000_000; i++) {
-      const id = getUniqueId();
+      const id = uid();
       expect(map[id]).toBeUndefined();
       map[id] = id;
     }
