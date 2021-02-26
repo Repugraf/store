@@ -39,12 +39,15 @@ export const createStore = <T>(
 
       e.message = "clone function crashed\n";
 
-      if (options.cloneFunction === undefined) e.message =+ (
+      if (options.cloneFunction === undefined) e.message += (
         "Don't use invalid json properties in store or provide custom clone function" +
         `\nRead more info here: ${jsonStringifyDocsLink}\n`
       );
+      else e.message += (
+        "Provide custom clone function to fix this issue\n"
+      );
 
-      e.message =+ errMessage;
+      e.message += errMessage;
 
       throw e;
     }
@@ -71,12 +74,15 @@ export const createStore = <T>(
 
       e.message = "isEqual function crashed\n";
 
-      if (options.isEqualFunction === undefined) e.message =+ (
+      if (options.isEqualFunction === undefined) e.message += (
         "Don't use invalid json properties in store or provide custom isEqual function" +
         `\nRead more info here: ${jsonStringifyDocsLink}\n`
       );
+      else e.message += (
+        "Provide custom isEqual function to fix this issue\n"
+      );
 
-      e.message =+ errMessage;
+      e.message += errMessage;
 
       throw e;
     }
