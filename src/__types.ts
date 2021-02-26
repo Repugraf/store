@@ -10,7 +10,7 @@ export interface StoreOptions {
    * To not use external libraries and be fast it uses
    * `JSON.parse(JSON.stringify(value))` on not primitive values
    * 
-   * This is fine for json-like data but will fail on when there is one not valid json values:
+   * This is fine for json-like data but will fail on when there is one of not valid json values:
    * `BigInt`, `Set`, `WeakSet`, `Map`, `WeakMap`, functions, `Symbol` cyclic values
    * 
    * To be able to use this values there inside store provide custom clone function
