@@ -53,58 +53,38 @@ const Counter = () => (
 ```
 ***
 ## Options
-### 1. Enabling mutations
-By default every store access (returned value `getState` function, first parameter in subscriber and publisher callbacks) will be a copy of actual store to prevent direct store mutations.
+### 1. `cloneFunction`
+The Store is using inner function to clone values
 
-This is fine in most cases but there might be a performance issue in this cases:
+To not use external libraries and be fast it uses
+`JSON.parse(JSON.stringify(value))` on not primitive values
 
-* Store is a deeply nested object or/and a lot of properties
-* There are a lot of subscribers and publish events per events per second
+This is fine for json-like data but will fail on when there is one not valid json values:
+`BigInt`, `Set`, `WeakSet`, `Map`, `WeakMap`, functions, `Symbol` cyclic values
 
-Also if store contains not valid `JSON` properties (ES6 `Map` or `Set`, `BigInt`, functions, `undefined` values, cyclic values etc.) they will be deleted.
+To be able to use this values there inside store provide custom clone function
+or disable cloning by setting `cloneFunction` to `null`
+(not recommended - will allow to mutate inner store state)
 
-To fix this issues you can enable mutations. This option will force store to always return actual store and not a copy of it.
+Read more about `JSON.stringify` limitations
+[here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description)
 
-Usage:
 ```js
-const initialStore = {
-  a:
-  {
-    b:
-    {
-      c:
-      {
-        d: [
-          {
-            e: 1n,
-            f: new Map(),
-            g: new Set(),
-            h: () => true,
-            i: undefined
-          }
-        ]
-      }
-    }
-  }
-};
+import { cloneDeep } from "lodash";
 
-const store = createStore(initialStore, { enableMutations: true });
-
-store.subscribe(data => console.log(data.a));
-store.subscribe(data => console.log(data.a.b));
-store.subscribe(data => console.log(data.a.b.c));
-store.subscribe(data => console.log(data.a.b.c.d));
-store.subscribe(data => console.log(data.a.b.c.d[0]));
-store.subscribe(data => console.log(data.a.b.c.d[0].e));
-
-setInterval(() => {
-  store.publish(data => {
-    data.a.b.c.d[0].e++;
-    return data;
-  });
-}), 10);
+const store = createStore({ a: 1n, s: new Set() }, { cloneFunction: cloneDeep });
 ```
 
-### 2. Disable Equality Check
-Store will not trigger publish event if published value is the same as before  
-It's possible to disable this behavior by setting `disableEqualityCheck` to `true`
+### 2. `isEqualFunction`
+On publish event the Store will check previous state for changes
+
+If there wasn't any - store will block running subscribers callbacks
+
+You can provide your custom isEqual function or set it to `null` to always run subscribers callbacks
+even is store remains unchanged
+
+```js
+import { isEqual } from "lodash";
+
+const store = createStore({ a: 1n, s: new Set() }, { isEqualFunction: isEqual });
+```
