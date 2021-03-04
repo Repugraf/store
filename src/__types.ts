@@ -3,6 +3,12 @@ export type PublisherCallback<T> = (data: T) => T;
 export type SubscriberCallback<T> = (data: T) => any;
 export type SubscribersHashMap<T> = Record<any, SubscriberCallback<T>>;
 
+export interface Store<T> {
+  publish: (dataOrCb: T | PublisherCallback<T>) => void;
+  subscribe: (callback: SubscriberCallback<T>) => Unsubscribe;
+  getState: () => T;
+}
+
 export interface StoreOptions {
   /**
    * The Store is using inner function to clone values
