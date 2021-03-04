@@ -53,7 +53,6 @@ export const createStore = <T>(
       throw e;
     }
 
-
     return value;
   };
 
