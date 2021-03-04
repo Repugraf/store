@@ -6,7 +6,7 @@ import type {
   StoreOptions
 } from "./__types";
 
-import { clone, uid, isEqual } from "./utils";
+import { clone, isEqual } from "./utils";
 
 const jsonStringifyDocsLink = "https://developer.mozilla.org/en-US" +
   "/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description";
@@ -89,13 +89,14 @@ export const createStore = <T>(
 
     if (!equal) {
       state = value;
-
-      for (const id in subscribers) subscribers[id](getState());
+    
+      const subscribersKeys = Reflect.ownKeys(subscribers) as any[];
+      for (const id of subscribersKeys) subscribers[id](getState());
     }
   };
 
   const subscribe = (callback: SubscriberCallback<T>): Unsubscribe => {
-    const id = uid();
+    const id = Symbol("id") as any;
 
     subscribers[id] = callback;
 

@@ -6,10 +6,6 @@ export const clone = <T>(value: T): T => (
   isPrimitive(value) ? value : JSON.parse(JSON.stringify(value))
 );
 
-export const uid = () => (
-  Math.random().toString(36).substr(2) + Date.now().toString(36)
-);
-
 export const isEqual = (firstVal: any, secondVal: any) => {
   try {
     return isPrimitive(firstVal)

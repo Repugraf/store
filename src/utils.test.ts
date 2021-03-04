@@ -1,4 +1,4 @@
-import { isPrimitive, clone, uid, isEqual } from "./utils";
+import { isPrimitive, clone, isEqual } from "./utils";
 
 describe("clone tests", () => {
   test("clones shallow object", () => {
@@ -17,20 +17,6 @@ describe("clone tests", () => {
     copiedValue.a.b.c.d.e = 2;
 
     expect(originalValue).toStrictEqual({ a: { b: { c: { d: { e: 1 } } } }, b: 2 });
-  });
-
-});
-
-describe("uid tests", () => {
-
-  test("should always return unique value", () => {
-    const map: { [key: string]: string } = {};
-
-    for (let i = 0; i > 1_000_000; i++) {
-      const id = uid();
-      expect(map[id]).toBeUndefined();
-      map[id] = id;
-    }
   });
 
 });

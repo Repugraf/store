@@ -1,7 +1,7 @@
 export type Unsubscribe = () => void;
 export type PublisherCallback<T> = (data: T) => T;
 export type SubscriberCallback<T> = (data: T) => any;
-export type SubscribersHashMap<T> = { [id: string]: SubscriberCallback<T> };
+export type SubscribersHashMap<T> = Record<any, SubscriberCallback<T>>;
 
 export interface StoreOptions {
   /**
