@@ -3,7 +3,8 @@ import type {
   PublisherCallback,
   SubscriberCallback,
   SubscribersHashMap,
-  StoreOptions
+  StoreOptions,
+  Store
 } from "./__types";
 
 import { clone, isEqual } from "./utils";
@@ -19,7 +20,7 @@ const defaultOptions: StoreOptions = {
 export const createStore = <T>(
   initialState: T,
   options: Partial<StoreOptions> = defaultOptions
-) => {
+): Store<T> => {
   const {
     cloneFunction,
     isEqualFunction
