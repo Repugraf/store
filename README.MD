@@ -54,9 +54,13 @@ const Counter = () => (
   </>
 );
 ```
+
 ***
+
 ## Options
+
 ### 1. `cloneFunction`
+
 The Store is using inner function to clone values
 
 To not use external libraries and be fast it uses
@@ -79,6 +83,7 @@ const store = createStore({ a: 1n, s: new Set() }, { cloneFunction: cloneDeep })
 ```
 
 ### 2. `isEqualFunction`
+
 On publish event the Store will check previous state for changes
 
 If there wasn't any - store will block running subscribers callbacks
