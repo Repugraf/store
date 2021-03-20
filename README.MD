@@ -6,6 +6,7 @@ It can be used in frontend and backend applications.
 It differs from other similar libraries because there is no need to use reducers or complex setup with actions. Also it's very light, doesn't have any dependencies and doesn't force any type of programing on you (object oriented, function oriented).
 ***
 Basic example
+
 ```js
 const store = createStore("");
 
@@ -15,6 +16,7 @@ store.publish("Hello from publisher");
 ```
 
 Usage with React
+
 ```jsx
 const counterStore = createStore(0);
 
@@ -23,8 +25,9 @@ const decrement = () => counterStore.publish(s => --s);
 
 const useCounterStore = () => {
   const [state, setState] = useState(counterStore.getState());
+  const unsubscribe = store.subscribe(data => setState(data);
 
-  useEffect(() => store.subscribe(data => setState(data)), []);
+  useEffect(() => unsubscribe), []);
 
   return state;
 }
